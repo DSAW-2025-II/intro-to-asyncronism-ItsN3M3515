@@ -5,5 +5,12 @@ const config = {
   APP_NAME: "Mi Pokedex"
 };
 
-// Exportar la configuración
-window.CONFIG = config;
+// Exportar la configuración solo si estamos en el navegador
+if (typeof window !== 'undefined') {
+  window.CONFIG = config;
+} else {
+  // Si estamos en Node.js, exportar como módulo. Esto es para poderlo probar en la terminal de VSCode y no en la terminal del browser 
+  if (typeof module !== 'undefined' && module.exports) {
+    module.exports = config;
+  }
+}
