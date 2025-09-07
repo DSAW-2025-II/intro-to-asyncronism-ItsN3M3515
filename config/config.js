@@ -1,6 +1,6 @@
 // Configuración de variables de entorno para producción
 const config = {
-  POKEMON_API_URL: "https://pokeapi.co/api/v2/pokemon/",
+  POKEMON_API_URL: "https://pokeapi.co/api/v2/",
   ENVIRONMENT: "production",
   APP_NAME: "Mi Pokedex"
 };
@@ -9,7 +9,7 @@ const config = {
 if (typeof window !== 'undefined') {
   window.CONFIG = config;
 } else {
-  // Si estamos en Node.js, exportar como módulo. Esto es para poderlo probar en la terminal de VSCode y no en la terminal del browser 
+  // Si estamos en Node.js, exportar como módulo
   if (typeof module !== 'undefined' && module.exports) {
     module.exports = config;
   }
