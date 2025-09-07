@@ -1,0 +1,8 @@
+# Add .env to gitignore to avoid committing sensitive data
+.env
+.env.local
+.env.development
+.env.production
+node_modules/
+dist/
+build/
