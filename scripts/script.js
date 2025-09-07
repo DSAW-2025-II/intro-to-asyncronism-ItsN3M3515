@@ -1,4 +1,5 @@
-let URL = "https://pokeapi.co/api/v2/pokemon/";
+// yo cuando variables de entorno
+const URL = window.CONFIG?.POKEMON_API_URL || "https://pokeapi.co/api/v2/pokemon/";
 
 async function fetchPokemon(pokemon) {
   try {
