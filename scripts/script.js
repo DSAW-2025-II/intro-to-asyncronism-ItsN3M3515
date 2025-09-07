@@ -47,6 +47,44 @@ async function getPokemonDetails(pokemonNameOrUrl) {
   }
 }
 
+// Endpoint 4: Obtener todas las áreas válidas de una región
+async function getRegionAreas(regionName) {
+  try {
+    console.log(`🗺️ Buscando áreas válidas en la región: ${regionName}`);
+    
+    // 1. Obtener datos de la región
+    let response = await fetch(`${POKEMON_API_BASE}region/${regionName}`);
+    if (!response.ok) throw new Error("No hay net - region");
+    let regionData = await response.json();
+    
+    console.log(`📍 Región encontrada: ${regionData.name}`);
+    
+    // 2. Extraer todas las locations de la región
+    const validLocations = regionData.locations.map(location => {
+      // Extraer el nombre de la URL (ej: "/location/1/" → "1")
+      const locationId = location.url.split('/').filter(Boolean).pop();
+      return {
+        name: location.name,
+        id: locationId,
+        url: location.url
+      };
+    });
+    
+    console.log(`🎯 Encontradas ${validLocations.length} locations válidas en ${regionName}:`);
+    validLocations.forEach(loc => console.log(`  • ${loc.name}`));
+    
+    return {
+      region: regionName,
+      locationCount: validLocations.length,
+      validLocations: validLocations
+    };
+    
+  } catch (error) {
+    console.error("La cagué obteniendo region", error);
+    return null;
+  }
+}
+
 // Función principal: Obtener tipos de Pokemon en un área específica
 async function getPokemonTypesInArea(areaName) {
   try {
@@ -99,31 +137,78 @@ async function getPokemonTypesInArea(areaName) {
   }
 }
 
+// Función extra: Buscar Pokemon en múltiples áreas de una región
+async function searchPokemonInRegion(regionName, maxAreas = 3) {
+  console.log(`🔍 Búsqueda completa de Pokemon en la región: ${regionName}`);
+  
+  try {
+    // 1. Obtener áreas válidas
+    const regionData = await getRegionAreas(regionName);
+    if (!regionData || !regionData.validLocations.length) {
+      console.log("❌ No se encontraron áreas válidas en esta región");
+      return;
+    }
+    
+    // 2. Buscar Pokemon en las primeras 'maxAreas' locations
+    const results = [];
+    for (let i = 0; i < Math.min(maxAreas, regionData.validLocations.length); i++) {
+      const location = regionData.validLocations[i];
+      console.log(`\n🔍 Analizando: ${location.name}`);
+      
+      const pokemonResult = await getPokemonTypesInArea(`${location.name}-area`);
+      if (pokemonResult && pokemonResult.pokemonCount > 0) {
+        results.push(pokemonResult);
+      }
+    }
+    
+    // 3. Resumen final
+    console.log(`\n📊 RESUMEN DE ${regionName.toUpperCase()}:`);
+    console.log(`• Áreas analizadas: ${results.length}`);
+    console.log(`• Total Pokemon únicos encontrados: ${results.reduce((sum, r) => sum + r.pokemonCount, 0)}`);
+    
+    return results;
+    
+  } catch (error) {
+    console.error("Error en búsqueda regional:", error);
+  }
+}
+
 // Demo: Ejecutar las funciones para mostrar el uso de múltiples endpoints
 async function runDemo() {
   console.log("🚀 Iniciando demo con múltiples endpoints de PokeAPI");
   
   try {
-    // Ejemplo 1: Obtener ubicación
-    await getLocation("canalave-city");
+    // Ejemplo 1: Buscar áreas válidas en Kanto
+    console.log("=".repeat(60));
+    const kantoAreas = await getRegionAreas("kanto");
     
-    console.log("\n" + "=".repeat(50) + "\n");
+    if (kantoAreas && kantoAreas.validLocations.length > 0) {
+      // Ejemplo 2: Usar una de las áreas válidas encontradas
+      console.log("\n" + "=".repeat(60) + "\n");
+      const firstLocation = kantoAreas.validLocations[0].name;
+      console.log(`🎯 Probando con la primera location válida: ${firstLocation}`);
+      
+      await getLocation(firstLocation);
+      
+      // Ejemplo 3: Buscar Pokemon en un área específica
+      console.log("\n" + "=".repeat(60) + "\n");
+      const result = await getPokemonTypesInArea(`${firstLocation}-area`);
+      
+      console.log("\n🎉 Resultado final:");
+      console.log(result);
+    }
     
-    // Ejemplo 2: Análisis completo de un área
-    const result = await getPokemonTypesInArea("canalave-city-area");
+    console.log("\n" + "=".repeat(60) + "\n");
     
-    console.log("\n🎉 Resultado final:");
-    console.log(result);
+    // Ejemplo 4: Obtener un Pokemon específico
     
-    console.log("\n" + "=".repeat(50) + "\n");
-    
-    // Ejemplo 3: Obtener un Pokemon específico
-    await getPokemonDetails("pikachu");
     
   } catch (error) {
     console.error("Error en el demo:", error);
   }
 }
+
+
 
 // Ejecutar el demo
 runDemo();
