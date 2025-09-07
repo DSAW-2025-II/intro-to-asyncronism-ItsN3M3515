@@ -180,7 +180,7 @@ async function runDemo() {
   try {
     // Ejemplo 1: Buscar áreas válidas en Kanto
     console.log("=".repeat(60));
-    const kantoAreas = await getRegionAreas("orange-islands");
+    const kantoAreas = await getRegionAreas("sinnoh");
     
     if (kantoAreas && kantoAreas.validLocations.length > 0) {
       // Ejemplo 2: Usar una de las áreas válidas encontradas
@@ -208,94 +208,6 @@ async function runDemo() {
   }
 }
 
-// Función para probar todas las áreas visibles en el mapa
-async function testMapAreas() {
-  console.log("🗺️ PROBANDO ÁREAS DEL MAPA POKEMON");
-  console.log("=".repeat(60));
-  
-  // Áreas de la primera imagen (nombres de regiones principales)
-  const regionNames = [
-    "kanto", "johto", "hoenn", "sinnoh", "unova", "kalos", 
-    "alola", "galar", "paldea"
-  ];
-  
-  // Áreas específicas visibles en el mapa (ciudades/towns)
-  const specificAreas = [
-    // De Kanto
-    "pallet-town", "cerulean-city", "lavender-town", "saffron-city",
-    "vermilion-city", "celadon-city", "fuchsia-city", "viridian-city",
-    
-    // De Johto  
-    "new-bark-town", "cherrygrove-city", "violet-city", "azalea-town",
-    "goldenrod-city", "ecruteak-city", "olivine-city", "cianwood-city",
-    
-    // De Hoenn
-    "littleroot-town", "petalburg-city", "rustboro-city", "dewford-town",
-    "slateport-city", "mauville-city", "verdanturf-town", "fallarbor-town",
-    
-    // De Sinnoh
-    "twinleaf-town", "sandgem-town", "jubilife-city", "oreburgh-city",
-    "floaroma-town", "eterna-city", "hearthome-city", "solaceon-town",
-    "veilstone-city", "pastoria-city", "celestic-town", "canalave-city",
-    "snowpoint-city", "sunyshore-city",
-    
-    // Lugares específicos del mapa que veo
-    "tokyo-city", "ryme-city", "fiore", "almia", "oblivia",
-    "ferrum", "pasio", "lental"
-  ];
-  
-  console.log("🔍 PROBANDO REGIONES:");
-  for (const region of regionNames) {
-    try {
-      const result = await getRegionAreas(region);
-      if (result) {
-        console.log(`✅ ${region}: ${result.locationCount} locations encontradas`);
-      } else {
-        console.log(`❌ ${region}: No válida`);
-      }
-    } catch (error) {
-      console.log(`❌ ${region}: Error - ${error.message}`);
-    }
-  }
-  
-  console.log("\n" + "=".repeat(60));
-  console.log("🏙️ PROBANDO CIUDADES/ÁREAS ESPECÍFICAS:");
-  
-  const validAreas = [];
-  const invalidAreas = [];
-  
-  for (const area of specificAreas) {
-    try {
-      const response = await fetch(`${POKEMON_API_BASE}location/${area}`);
-      if (response.ok) {
-        validAreas.push(area);
-        console.log(`✅ ${area}: Válida`);
-      } else {
-        invalidAreas.push(area);
-        console.log(`❌ ${area}: No válida (${response.status})`);
-      }
-    } catch (error) {
-      invalidAreas.push(area);
-      console.log(`❌ ${area}: Error de conexión`);
-    }
-  }
-  
-  console.log("\n" + "=".repeat(60));
-  console.log("📊 RESUMEN:");
-  console.log(`✅ Áreas válidas encontradas: ${validAreas.length}`);
-  console.log(`❌ Áreas no válidas: ${invalidAreas.length}`);
-  
-  console.log("\n🎯 ÁREAS VÁLIDAS PARA USAR:");
-  validAreas.forEach(area => console.log(`  • ${area}`));
-  
-  console.log("\n❌ ÁREAS QUE NO FUNCIONAN:");
-  invalidAreas.forEach(area => console.log(`  • ${area}`));
-  
-  return { validAreas, invalidAreas };
-}
-
 // Ejecutar el demo
-// runDemo();
+runDemo();
 
-// Ejecutar prueba de áreas del mapa
-testMapAreas();
