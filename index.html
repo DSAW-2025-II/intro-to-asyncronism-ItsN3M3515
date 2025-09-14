@@ -4,17 +4,62 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mi pokedex</title>
+    <link rel="stylesheet" href="styles/styles.css">
 </head>
 <body>
     <div class="main">
         <h1>Mi pokedex</h1>
         <div id="pokedex">
-            <img src="images/map.svg" alt="test">
+            <img src="images/map.png" alt="Pokemon World Map" usemap="#pokemon-map">
+            <map name="pokemon-map">
+                <!-- Kalos -->
+                <area shape="rect" coords="2741,4511,5093,5540" href="#kalos" alt="Kalos" title="Kalos Region">
+                
+                <!-- Orre (corrected coordinate) -->
+                <area shape="rect" coords="3631,6274,5267,7375" href="#orre" alt="Orre" title="Orre Region">
+                
+                <!-- Paldea -->
+                <area shape="rect" coords="462,6249,3036,8033" href="#paldea" alt="Paldea" title="Paldea Region">
+                
+                <!-- Galar -->
+                <area shape="rect" coords="3537,2010,6423,3801" href="#galar" alt="Galar" title="Galar Region">
+                
+                <!-- Alola -->
+                <area shape="rect" coords="3374,8664,6637,10503" href="#alola" alt="Alola" title="Alola Region">
+                
+                <!-- Unova -->
+                <area shape="rect" coords="6167,4261,8840,5041" href="#unova" alt="Unova" title="Unova Region">
+                
+                <!-- Fiore -->
+                <area shape="rect" coords="7782,2619,10170,3901" href="#fiore" alt="Fiore" title="Fiore Region">
+                
+                <!-- Hoenn -->
+                <area shape="rect" coords="9401,7565,13410,10041" href="#hoenn" alt="Hoenn" title="Hoenn Region">
+                
+                <!-- Almia (corrected coordinates) -->
+                <area shape="rect" coords="10319,840,12093,1997" href="#almia" alt="Almia" title="Almia Region">
+                
+                <!-- Sinnoh -->
+                <area shape="rect" coords="12477,599,14630,2814" href="#sinnoh" alt="Sinnoh" title="Sinnoh Region">
+                
+                <!-- Oblivia -->
+                <area shape="rect" coords="13778,9214,16464,10986" href="#oblivia" alt="Oblivia" title="Oblivia Region">
+                
+                <!-- Ferrum -->
+                <area shape="rect" coords="15420,2382,18442,4090" href="#ferrum" alt="Ferrum" title="Ferrum Region">
+                
+                <!-- Kanto -->
+                <area shape="rect" coords="16342,4608,18708,6030" href="#kanto" alt="Kanto" title="Kanto Region">
+                
+                <!-- Johto -->
+                <area shape="rect" coords="13437,4932,15964,6267" href="#johto" alt="Johto" title="Johto Region">
+            </map>
         </div>
         <!-- Primero configuracion -->
         <script src="config/config.js"></script>
         <!-- Ahora si el script -->
         <script src="scripts/script.js"></script>
+        
     </div>
 </body>
 </html>
