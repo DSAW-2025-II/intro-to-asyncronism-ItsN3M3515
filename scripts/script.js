@@ -8,10 +8,66 @@ window.testClick = function(regionName) {
   alert(`✅ SUCCESS! Click test works for: ${regionName.toUpperCase()}`);
 };
 
-window.selectRegion = function(regionName) {
-  console.log(`🗺️ IMMEDIATE Region click for: ${regionName}`);
-  alert(`🌍 Region selected: ${regionName.toUpperCase()}\nThis will load region data soon...`);
-  // The actual implementation will be set later when DOM is ready
+// Simple test function for region clicking
+window.testRegionClick = function(regionName) {
+  console.log(`🎯 TEST REGION CLICK: ${regionName}`);
+  alert(`🎯 TEST: Region ${regionName.toUpperCase()} clicked successfully!`);
+  
+  // Show loading
+  const loadingEl = document.getElementById('loading');
+  if (loadingEl) {
+    loadingEl.classList.remove('hidden');
+    loadingEl.innerHTML = '<p>🔄 Test loading for ' + regionName + '...</p>';
+    console.log('✅ Loading shown for', regionName);
+  } else {
+    console.log('❌ Loading element not found');
+  }
+};
+
+window.selectRegion = async function(regionName) {
+  try {
+    console.log(`🗺️ IMMEDIATE Region click for: ${regionName}`);
+    console.log('🔄 Step 1: Function started successfully');
+    
+    // First, check if the local selectRegion function exists
+    console.log('� Step 2: About to check function availability...');
+    console.log('�🔍 Function availability check:');
+    console.log('- typeof selectRegion:', typeof selectRegion);
+    
+    console.log('🔄 Step 3: Function type checked, getting reference...');
+    console.log('- selectRegion function:', selectRegion);
+    
+    console.log('🔄 Step 4: About to check DOM elements...');
+    // Check if DOM elements exist
+    const loadingEl = document.getElementById('loading');
+    const regionTitleEl = document.getElementById('region-title');
+    console.log('🔍 DOM elements check:');
+    console.log('- loading element:', loadingEl);
+    console.log('- region-title element:', regionTitleEl);
+    
+    console.log('🔄 Step 5: Validation checks...');
+    if (typeof selectRegion !== 'function') {
+      console.error('❌ selectRegion function not found!');
+      alert(`Function not found for region: ${regionName}`);
+      return;
+    }
+    
+    if (!loadingEl || !regionTitleEl) {
+      console.error('❌ Required DOM elements not found!');
+      alert(`DOM elements missing for region: ${regionName}`);
+      return;
+    }
+    
+    // If we get here, try calling the function
+    console.log('🚀 About to call selectRegion function...');
+    await selectRegion(regionName);
+    console.log('✅ selectRegion completed successfully');
+    
+  } catch (error) {
+    console.error('💥 CRITICAL ERROR in window.selectRegion:', error);
+    console.error('💥 Error stack:', error.stack);
+    alert(`CRITICAL ERROR: ${error.message}`);
+  }
 };
 
 window.goBack = function() {
@@ -636,14 +692,62 @@ function goHome() {
 // Make functions globally accessible for HTML onclick events
 window.testClick = testClick;
 window.selectRegion = selectRegion;
+window.testRegionClick = function(regionName) {
+  console.log(`🎯 TEST REGION CLICK: ${regionName}`);
+  
+  // First show alert to confirm function works
+  alert(`🎯 TEST: Region ${regionName.toUpperCase()} clicked successfully! Check console for element details.`);
+  
+  // Debug all elements
+  console.log('🔍 DEBUGGING ALL ELEMENTS:');
+  const loadingEl = document.getElementById('loading');
+  const regionTitle = document.getElementById('region-title');  
+  const contentArea = document.getElementById('content-area');
+  
+  console.log('- loading element:', loadingEl);
+  console.log('- region-title element:', regionTitle);
+  console.log('- content-area element:', contentArea);
+  
+  if (loadingEl) {
+    console.log('BEFORE - loading classList:', loadingEl.classList.toString());
+    console.log('BEFORE - loading display:', getComputedStyle(loadingEl).display);
+    console.log('BEFORE - loading visibility:', getComputedStyle(loadingEl).visibility);
+    
+    // Force show loading element
+    loadingEl.classList.remove('hidden');
+    loadingEl.style.display = 'block';
+    loadingEl.style.visibility = 'visible';
+    loadingEl.style.backgroundColor = 'yellow'; // Make it super obvious
+    loadingEl.style.padding = '20px';
+    loadingEl.style.border = '3px solid red';
+    loadingEl.innerHTML = '<h2>🔄 TEST LOADING FOR ' + regionName.toUpperCase() + '</h2>';
+    
+    console.log('AFTER - loading classList:', loadingEl.classList.toString());
+    console.log('AFTER - loading display:', getComputedStyle(loadingEl).display);
+    console.log('AFTER - loading visibility:', getComputedStyle(loadingEl).visibility);
+    console.log('✅ Loading element modified');
+  }
+  
+  // Try to show region title too
+  if (regionTitle) {
+    regionTitle.style.display = 'block';
+    regionTitle.style.backgroundColor = 'lightblue';
+    regionTitle.style.padding = '10px';
+    regionTitle.textContent = `🌍 TESTING: ${regionName.toUpperCase()}`;
+    console.log('✅ Region title updated');
+  }
+};
 window.goBack = goBack;
 window.goHome = goHome;
+window.getUniversalRegionInfo = getUniversalRegionInfo;
 
 console.log("🌐 Global functions exposed:", {
   testClick: typeof window.testClick,
   selectRegion: typeof window.selectRegion,
+  testRegionClick: typeof window.testRegionClick,
   goBack: typeof window.goBack,
-  goHome: typeof window.goHome
+  goHome: typeof window.goHome,
+  getUniversalRegionInfo: typeof window.getUniversalRegionInfo
 });
 
 // Display region information and location buttons
