@@ -1,0 +1,356 @@
+/* Mi Pokédex - Styles */
+
+/* Global styles */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    color: #333;
+}
+
+.main {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+h1 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 30px;
+    font-size: 2.5em;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Map container */
+#pokedex {
+    text-align: center;
+    margin-bottom: 30px;
+    position: relative;
+}
+
+#pokedex img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Debug: Show clickable areas (remove this in production) */
+area:hover {
+    background: rgba(255, 0, 0, 0.3) !important;
+    cursor: pointer !important;
+}
+
+/* Add visual indicator for map areas */
+map {
+    position: relative;
+}
+
+/* Utility classes */
+.hidden {
+    display: none !important;
+}
+
+.error {
+    background-color: #ffebee;
+    color: #c62828;
+    padding: 15px;
+    border-radius: 8px;
+    border-left: 4px solid #f44336;
+}
+
+/* Content area styles */
+#content-area {
+    margin-top: 30px;
+}
+
+/* Loading indicator */
+#loading {
+    text-align: center;
+    padding: 40px;
+    font-size: 1.2em;
+    color: #666;
+}
+
+#loading p {
+    margin: 0;
+    animation: pulse 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes pulse {
+    from { opacity: 0.6; }
+    to { opacity: 1; }
+}
+
+/* Region information */
+#region-info {
+    background: #e3f2fd;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    border-left: 4px solid #2196f3;
+}
+
+#region-title {
+    color: #1565c0;
+    margin-top: 0;
+    font-size: 1.8em;
+}
+
+#region-description {
+    white-space: pre-line;
+    color: #424242;
+    line-height: 1.6;
+}
+
+#region-stats {
+    margin-top: 15px;
+    font-size: 1.1em;
+}
+
+/* Locations container */
+#locations-container {
+    margin-bottom: 30px;
+}
+
+#locations-container h3 {
+    color: #2c3e50;
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 10px;
+}
+
+#locations-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.location-button {
+    background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+    color: white;
+    border: none;
+    padding: 15px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.location-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    background: linear-gradient(135deg, #0984e3 0%, #74b9ff 100%);
+}
+
+.location-button:active {
+    transform: translateY(0);
+}
+
+/* Pokemon container */
+#pokemon-container {
+    margin-bottom: 30px;
+}
+
+#location-title {
+    color: #2c3e50;
+    border-bottom: 2px solid #e74c3c;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+#pokemon-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.pokemon-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border: 2px solid #f8f9fa;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.pokemon-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+.pokemon-header h4 {
+    color: #2c3e50;
+    margin: 0 0 10px 0;
+    font-size: 1.3em;
+}
+
+.pokemon-header p {
+    color: #7f8c8d;
+    margin: 0 0 15px 0;
+    font-weight: 500;
+}
+
+.pokemon-image {
+    text-align: center;
+    margin: 15px 0;
+}
+
+.pokemon-image img {
+    width: 96px;
+    height: 96px;
+    background: #f8f9fa;
+    border-radius: 50%;
+    border: 3px solid #e9ecef;
+}
+
+.pokemon-physical {
+    background: #f8f9fa;
+    padding: 10px;
+    border-radius: 6px;
+    margin: 15px 0;
+}
+
+.pokemon-physical p {
+    margin: 5px 0;
+    color: #495057;
+}
+
+.pokemon-stats {
+    background: #fff3cd;
+    padding: 15px;
+    border-radius: 6px;
+    border-left: 4px solid #ffc107;
+    margin-top: 15px;
+}
+
+.pokemon-stats h5 {
+    margin: 0 0 10px 0;
+    color: #856404;
+}
+
+.pokemon-stats ul {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.pokemon-stats li {
+    margin: 5px 0;
+    color: #6c5300;
+}
+
+.pokemon-error {
+    text-align: center;
+    padding: 20px;
+    color: #c62828;
+    background: #ffebee;
+    border-radius: 8px;
+}
+
+.spin-off-note {
+    background: #e1f5fe;
+    color: #01579b;
+    padding: 8px;
+    border-radius: 4px;
+    font-size: 0.9em;
+    text-align: center;
+    margin-top: 15px;
+    border-left: 3px solid #03a9f4;
+}
+
+/* No Pokemon message */
+#no-pokemon-message {
+    text-align: center;
+    padding: 40px;
+    background: #fff3cd;
+    border-radius: 10px;
+    border: 2px dashed #ffc107;
+    color: #856404;
+    font-size: 1.2em;
+}
+
+#no-pokemon-message p {
+    margin: 0;
+}
+
+/* Navigation buttons */
+#navigation {
+    text-align: center;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 2px solid #ecf0f1;
+}
+
+#navigation button {
+    background: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%);
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    margin: 0 10px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+#navigation button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    background: linear-gradient(135deg, #a29bfe 0%, #6c5ce7 100%);
+}
+
+#navigation button:active {
+    transform: translateY(0);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .main {
+        margin: 10px;
+        padding: 15px;
+    }
+    
+    h1 {
+        font-size: 2em;
+    }
+    
+    #locations-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 10px;
+    }
+    
+    #pokemon-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .location-button {
+        padding: 12px 15px;
+        font-size: 0.9em;
+    }
+}
+
+@media (max-width: 480px) {
+    .main {
+        margin: 5px;
+        padding: 10px;
+    }
+    
+    h1 {
+        font-size: 1.8em;
+    }
+    
+    #locations-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}

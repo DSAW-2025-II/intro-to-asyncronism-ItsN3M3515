@@ -9,55 +9,134 @@
 <body>
     <div class="main">
         <h1>Mi pokedex</h1>
+        
+        <!-- Test Button for Click Events -->
+        <div style="text-align: center; margin: 20px;">
+            <button onclick="testClick('test')" style="background: red; color: white; padding: 10px 20px; font-size: 16px;">
+                🧪 CLICK TEST BUTTON
+            </button>
+            <p>If this button shows an alert, then clicks work!</p>
+        </div>
+        
         <div id="pokedex">
-            <img src="images/map.png" alt="Pokemon World Map" usemap="#pokemon-map">
+            <img src="images/map.png" alt="Pokemon World Map" usemap="#pokemon-map" id="pokemon-map-image">
             <map name="pokemon-map">
+                <!-- Accurate coordinates mapped by user -->
                 <!-- Kalos -->
-                <area shape="rect" coords="2741,4511,5093,5540" href="#kalos" alt="Kalos" title="Kalos Region">
+                <area shape="rect" coords="639,1058,1258,1336" onclick="selectRegion('kalos')" alt="Kalos" title="Kalos Region">
                 
-                <!-- Orre (corrected coordinate) -->
-                <area shape="rect" coords="3631,6274,5267,7375" href="#orre" alt="Orre" title="Orre Region">
+                <!-- Orre -->
+                <area shape="rect" coords="870,1526,1384,1766" onclick="selectRegion('orre')" alt="Orre" title="Orre Region">
                 
                 <!-- Paldea -->
-                <area shape="rect" coords="462,6249,3036,8033" href="#paldea" alt="Paldea" title="Paldea Region">
-                
-                <!-- Galar -->
-                <area shape="rect" coords="3537,2010,6423,3801" href="#galar" alt="Galar" title="Galar Region">
-                
-                <!-- Alola -->
-                <area shape="rect" coords="3374,8664,6637,10503" href="#alola" alt="Alola" title="Alola Region">
+                <area shape="rect" coords="148,1515,722,1902" onclick="selectRegion('paldea')" alt="Paldea" title="Paldea Region">
                 
                 <!-- Unova -->
-                <area shape="rect" coords="6167,4261,8840,5041" href="#unova" alt="Unova" title="Unova Region">
+                <area shape="rect" coords="1479,959,2189,1237" onclick="selectRegion('unova')" alt="Unova" title="Unova Region">
+                
+                <!-- Galar -->
+                <area shape="rect" coords="897,541,1501,872" onclick="selectRegion('galar')" alt="Galar" title="Galar Region">
                 
                 <!-- Fiore -->
-                <area shape="rect" coords="7782,2619,10170,3901" href="#fiore" alt="Fiore" title="Fiore Region">
+                <area shape="rect" coords="1927,693,2402,857" onclick="selectRegion('fiore')" alt="Fiore" title="Fiore Region">
                 
-                <!-- Hoenn -->
-                <area shape="rect" coords="9401,7565,13410,10041" href="#hoenn" alt="Hoenn" title="Hoenn Region">
+                <!-- Alola -->
+                <area shape="rect" coords="851,2104,1539,2477" onclick="selectRegion('alola')" alt="Alola" title="Alola Region">
                 
-                <!-- Almia (corrected coordinates) -->
-                <area shape="rect" coords="10319,840,12093,1997" href="#almia" alt="Almia" title="Almia Region">
+                <!-- Almia -->
+                <area shape="rect" coords="2463,214,2923,419" onclick="selectRegion('almia')" alt="Almia" title="Almia Region">
                 
                 <!-- Sinnoh -->
-                <area shape="rect" coords="12477,599,14630,2814" href="#sinnoh" alt="Sinnoh" title="Sinnoh Region">
-                
-                <!-- Oblivia -->
-                <area shape="rect" coords="13778,9214,16464,10986" href="#oblivia" alt="Oblivia" title="Oblivia Region">
-                
-                <!-- Ferrum -->
-                <area shape="rect" coords="15420,2382,18442,4090" href="#ferrum" alt="Ferrum" title="Ferrum Region">
-                
-                <!-- Kanto -->
-                <area shape="rect" coords="16342,4608,18708,6030" href="#kanto" alt="Kanto" title="Kanto Region">
+                <area shape="rect" coords="2984,126,3577,632" onclick="selectRegion('sinnoh')" alt="Sinnoh" title="Sinnoh Region">
                 
                 <!-- Johto -->
-                <area shape="rect" coords="13437,4932,15964,6267" href="#johto" alt="Johto" title="Johto Region">
+                <area shape="rect" coords="3250,1119,3824,1526" onclick="selectRegion('johto')" alt="Johto" title="Johto Region">
+                
+                <!-- Ferrum -->
+                <area shape="rect" coords="3744,651,4344,940" onclick="selectRegion('ferrum')" alt="Ferrum" title="Ferrum Region">
+                
+                <!-- Kanto -->
+                <area shape="rect" coords="3919,1142,4474,1378" onclick="selectRegion('kanto')" alt="Kanto" title="Kanto Region">
+                
+                <!-- Hoenn -->
+                <area shape="rect" coords="2315,1899,3181,2359" onclick="selectRegion('hoenn')" alt="Hoenn" title="Hoenn Region">
+                
+                <!-- Oblivia -->
+                <area shape="rect" coords="3364,2287,3991,2530" onclick="selectRegion('oblivia')" alt="Oblivia" title="Oblivia Region">
             </map>
         </div>
-        <!-- Primero configuracion -->
+
+        <!-- Display sections for region and Pokemon data -->
+        <div id="content-area">
+            <!-- Loading indicator -->
+            <div id="loading" class="hidden">
+                <p>🔄 Cargando...</p>
+            </div>
+
+            <!-- Error messages -->
+            <div id="error-message" class="hidden error">
+                <p id="error-text"></p>
+            </div>
+
+            <!-- Region information display -->
+            <div id="region-info" class="hidden">
+                <h2 id="region-title"></h2>
+                <p id="region-description"></p>
+                <div id="region-stats"></div>
+            </div>
+
+            <!-- Locations/Areas buttons container -->
+            <div id="locations-container" class="hidden">
+                <h3>🗺️ Ubicaciones disponibles:</h3>
+                <div id="locations-grid"></div>
+            </div>
+
+            <!-- Pokemon display area -->
+            <div id="pokemon-container" class="hidden">
+                <h3 id="location-title"></h3>
+                <div id="pokemon-grid"></div>
+                <div id="no-pokemon-message" class="hidden">
+                    <p>😅 Ups, no hay pokemones disponibles en esta ubicación</p>
+                </div>
+            </div>
+
+            <!-- Back button -->
+            <div id="navigation" class="hidden">
+                <button id="back-button" onclick="goBack()">⬅️ Volver</button>
+                <button id="home-button" onclick="goHome()">🏠 Inicio</button>
+            </div>
+        </div>
+
+        <!-- CLEAN INLINE SCRIPT -->
+        <script>
+            console.log("🟢 Clean script loaded!");
+            
+            // Define functions globally - NO interference
+            window.testClick = function(regionName) {
+                console.log("🧪 testClick called for:", regionName);
+                alert("✅ Test click works for: " + regionName.toUpperCase());
+            };
+            
+            window.selectRegion = function(regionName) {
+                console.log("🗺️ selectRegion called for:", regionName);
+                alert("🌍 Region selected: " + regionName.toUpperCase());
+            };
+            
+            window.goBack = function() {
+                console.log("⬅️ Going back");
+                alert("⬅️ Going back...");
+            };
+            
+            window.goHome = function() {
+                console.log("🏠 Going home");
+                alert("🏠 Going home...");
+            };
+            
+            console.log("✅ All functions ready - no interference!");
+        </script>
+        
+        <!-- External scripts -->
         <script src="config/config.js"></script>
-        <!-- Ahora si el script -->
         <script src="scripts/script.js"></script>
         
     </div>

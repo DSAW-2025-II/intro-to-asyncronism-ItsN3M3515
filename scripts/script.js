@@ -1,7 +1,31 @@
 // yo cuando variables de entorno
 // Verificar que estamos en el navegador antes de usar window
+console.log("🔥 Script.js loading started...");
+
+// IMMEDIATE GLOBAL FUNCTION DEFINITIONS - Available right away for onclick
+window.testClick = function(regionName) {
+  console.log(`🧪 IMMEDIATE Test click working for: ${regionName}`);
+  alert(`✅ SUCCESS! Click test works for: ${regionName.toUpperCase()}`);
+};
+
+window.selectRegion = function(regionName) {
+  console.log(`🗺️ IMMEDIATE Region click for: ${regionName}`);
+  alert(`🌍 Region selected: ${regionName.toUpperCase()}\nThis will load region data soon...`);
+  // The actual implementation will be set later when DOM is ready
+};
+
+window.goBack = function() {
+  alert("⬅️ Going back...");
+};
+
+window.goHome = function() {
+  alert("🏠 Going home...");
+};
+
 const POKEMON_API_BASE = (typeof window !== 'undefined' && window.CONFIG?.POKEMON_API_URL) || "https://pokeapi.co/api/v2/"; // el "?" es para que no se dañe si no existe window.CONFIG (fallback)
 // esto es para evitar hacerle hardcode a la URL en el código
+
+console.log("🔧 Pokemon API Base URL:", POKEMON_API_BASE);
 
 // Estas regiones como son de spinoffs, me toca hacerle un hardcode a ellas
 const SPIN_OFF_REGIONS = {
@@ -494,6 +518,458 @@ async function runDemo() {
   }
 } 
 
-// Ejecutar el demo
-runDemo();
+// =============================================================================
+// GLOBAL FUNCTIONS - Must be defined at top level for HTML onclick access
+// =============================================================================
+
+// Test function to verify clicks work
+function testClick(regionName) {
+  console.log(`🧪 Test click working for: ${regionName}`);
+  alert(`Click test successful! Region: ${regionName}`);
+}
+
+// Global state to track current navigation
+let currentState = {
+  view: 'home', // 'home', 'region', 'location'
+  currentRegion: null,
+  currentLocation: null,
+  regionData: null
+};
+
+// Utility functions for showing/hiding elements
+function showElement(id) {
+  const element = document.getElementById(id);
+  if (element) element.classList.remove('hidden');
+}
+
+function hideElement(id) {
+  const element = document.getElementById(id);
+  if (element) element.classList.add('hidden');
+}
+
+function showLoading() {
+  hideAllSections();
+  showElement('loading');
+}
+
+function hideLoading() {
+  hideElement('loading');
+}
+
+function showError(message) {
+  hideLoading();
+  document.getElementById('error-text').textContent = message;
+  showElement('error-message');
+}
+
+function hideAllSections() {
+  hideElement('region-info');
+  hideElement('locations-container');
+  hideElement('pokemon-container');
+  hideElement('error-message');
+  hideElement('loading');
+  hideElement('navigation');
+}
+
+// Main function called when user clicks a region on the map
+async function selectRegion(regionName) {
+  console.log(`🗺️ Usuario seleccionó región: ${regionName}`);
+  console.log(`🔍 Iniciando búsqueda de información para: ${regionName}`);
+  
+  // Add visual feedback immediately
+  alert(`Cargando información de la región: ${regionName.toUpperCase()}`);
+  
+  showLoading();
+  
+  try {
+    // Get region data using existing function
+    console.log(`📡 Llamando getUniversalRegionInfo para: ${regionName}`);
+    const regionData = await getUniversalRegionInfo(regionName);
+    console.log(`📊 Datos recibidos para ${regionName}:`, regionData);
+    
+    if (!regionData || !regionData.areas) {
+      console.error(`❌ No se obtuvieron datos válidos para: ${regionName}`);
+      showError(`No se pudo obtener información de la región: ${regionName}`);
+      return;
+    }
+    
+    // Update global state
+    currentState = {
+      view: 'region',
+      currentRegion: regionName,
+      currentLocation: null,
+      regionData: regionData
+    };
+    
+    console.log(`✅ Mostrando información de región: ${regionName}`);
+    // Display region information
+    displayRegionInfo(regionName, regionData);
+    
+  } catch (error) {
+    console.error("❌ Error seleccionando región:", error);
+    showError(`Error cargando región ${regionName}: ${error.message}`);
+  }
+}
+
+// Navigation functions
+function goBack() {
+  if (currentState.view === 'location') {
+    // Go back to region view
+    displayRegionInfo(currentState.currentRegion, currentState.regionData);
+  } else if (currentState.view === 'region') {
+    // Go back to home
+    goHome();
+  }
+}
+
+function goHome() {
+  currentState = {
+    view: 'home',
+    currentRegion: null,
+    currentLocation: null,
+    regionData: null
+  };
+  
+  hideAllSections();
+}
+
+// Make functions globally accessible for HTML onclick events
+window.testClick = testClick;
+window.selectRegion = selectRegion;
+window.goBack = goBack;
+window.goHome = goHome;
+
+console.log("🌐 Global functions exposed:", {
+  testClick: typeof window.testClick,
+  selectRegion: typeof window.selectRegion,
+  goBack: typeof window.goBack,
+  goHome: typeof window.goHome
+});
+
+// Display region information and location buttons
+function displayRegionInfo(regionName, regionData) {
+  hideLoading();
+  hideAllSections();
+  
+  const areas = regionData.areas;
+  
+  // Update region info section
+  document.getElementById('region-title').textContent = 
+    `🌍 Región: ${regionName.charAt(0).toUpperCase() + regionName.slice(1)}`;
+  
+  let description = `Tipo: ${areas.isSpinOff ? 'Spin-off' : 'Región oficial'}`;
+  if (areas.game) description += `\nJuego: ${areas.game}`;
+  if (areas.generation) description += `\nGeneración: ${areas.generation}`;
+  
+  document.getElementById('region-description').textContent = description;
+  document.getElementById('region-stats').innerHTML = 
+    `<p>📍 <strong>${areas.locationCount}</strong> ubicaciones disponibles</p>`;
+  
+  // Create location buttons
+  const locationsGrid = document.getElementById('locations-grid');
+  locationsGrid.innerHTML = ''; // Clear previous content
+  
+  areas.validLocations.forEach(location => {
+    const button = document.createElement('button');
+    button.className = 'location-button';
+    button.textContent = location.displayName || location.name;
+    button.onclick = () => selectLocation(location, areas.isSpinOff);
+    
+    if (location.description) {
+      button.title = location.description;
+    }
+    
+    locationsGrid.appendChild(button);
+  });
+  
+  // Show sections
+  showElement('region-info');
+  showElement('locations-container');
+  showElement('navigation');
+}
+
+// Function called when user clicks a location button
+async function selectLocation(location, isSpinOff) {
+  console.log(`📍 Usuario seleccionó ubicación: ${location.name}`);
+  
+  showLoading();
+  
+  try {
+    currentState.view = 'location';
+    currentState.currentLocation = location;
+    
+    if (isSpinOff) {
+      // Handle spin-off locations
+      displaySpinOffLocationPokemon(location);
+    } else {
+      // Handle official API locations
+      await displayOfficialLocationPokemon(location);
+    }
+    
+  } catch (error) {
+    console.error("Error seleccionando ubicación:", error);
+    showError(`Error cargando ubicación ${location.name}: ${error.message}`);
+  }
+}
+
+// Display Pokemon for spin-off regions
+function displaySpinOffLocationPokemon(location) {
+  hideLoading();
+  hideAllSections();
+  
+  const regionData = currentState.regionData;
+  const pokemonList = regionData.areas.pokemonEncounters || [];
+  
+  // Update location title
+  document.getElementById('location-title').textContent = 
+    `📍 ${location.displayName || location.name}`;
+  
+  if (pokemonList.length === 0) {
+    showElement('no-pokemon-message');
+  } else {
+    displayPokemonGrid(pokemonList, true); // true = isSpinOff
+  }
+  
+  showElement('pokemon-container');
+  showElement('navigation');
+}
+
+// Display Pokemon for official API locations
+async function displayOfficialLocationPokemon(location) {
+  try {
+    // Try to get Pokemon from this location area
+    const pokemonData = await getPokemonTypesInArea(`${location.name}-area`);
+    
+    hideLoading();
+    hideAllSections();
+    
+    // Update location title
+    document.getElementById('location-title').textContent = 
+      `📍 ${location.name.charAt(0).toUpperCase() + location.name.slice(1)}`;
+    
+    if (!pokemonData || pokemonData.pokemonCount === 0) {
+      showElement('no-pokemon-message');
+    } else {
+      displayPokemonGrid(pokemonData.pokemonList, false); // false = not spin-off
+    }
+    
+    showElement('pokemon-container');
+    showElement('navigation');
+    
+  } catch (error) {
+    console.error("Error getting official location Pokemon:", error);
+    hideLoading();
+    hideAllSections();
+    showElement('no-pokemon-message');
+    showElement('pokemon-container');
+    showElement('navigation');
+  }
+}
+
+// Display Pokemon in a grid layout with their stats
+async function displayPokemonGrid(pokemonList, isSpinOff) {
+  const pokemonGrid = document.getElementById('pokemon-grid');
+  pokemonGrid.innerHTML = ''; // Clear previous content
+  
+  for (const pokemon of pokemonList) {
+    const pokemonCard = document.createElement('div');
+    pokemonCard.className = 'pokemon-card';
+    
+    try {
+      let pokemonDetails;
+      
+      if (isSpinOff) {
+        // For spin-off regions, we already have basic info
+        pokemonDetails = {
+          name: pokemon.name,
+          types: pokemon.types.map(type => ({ type: { name: type } })),
+          weight: null, // Not available for spin-offs
+          height: null, // Not available for spin-offs
+          sprites: { front_default: null }, // We'll use a placeholder
+          stats: [] // Not available for spin-offs
+        };
+      } else {
+        // For official regions, fetch full details
+        pokemonDetails = await getPokemonDetails(pokemon.name);
+      }
+      
+      if (pokemonDetails) {
+        pokemonCard.innerHTML = createPokemonCardHTML(pokemonDetails, isSpinOff);
+      } else {
+        pokemonCard.innerHTML = `
+          <div class="pokemon-error">
+            <h4>❌ ${pokemon.name}</h4>
+            <p>Error cargando datos</p>
+          </div>
+        `;
+      }
+      
+    } catch (error) {
+      console.error(`Error loading Pokemon ${pokemon.name}:`, error);
+      pokemonCard.innerHTML = `
+        <div class="pokemon-error">
+          <h4>❌ ${pokemon.name}</h4>
+          <p>Error cargando datos</p>
+        </div>
+      `;
+    }
+    
+    pokemonGrid.appendChild(pokemonCard);
+  }
+  
+  showElement('pokemon-container');
+}
+
+// Create HTML for a Pokemon card
+function createPokemonCardHTML(pokemon, isSpinOff) {
+  const name = pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1);
+  const types = pokemon.types.map(t => t.type.name).join(', ');
+  
+  // Pokemon image
+  const imageUrl = pokemon.sprites?.front_default || 
+    `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${getPokemonIdFromName(pokemon.name)}.png`;
+  
+  // Stats section
+  let statsHTML = '';
+  if (!isSpinOff && pokemon.stats && pokemon.stats.length > 0) {
+    statsHTML = `
+      <div class="pokemon-stats">
+        <h5>📊 Estadísticas base:</h5>
+        <ul>
+          ${pokemon.stats.map(stat => 
+            `<li><strong>${translateStatName(stat.stat.name)}:</strong> ${stat.base_stat}</li>`
+          ).join('')}
+        </ul>
+      </div>
+    `;
+  }
+  
+  // Physical data section
+  let physicalHTML = '';
+  if (!isSpinOff && pokemon.weight !== null && pokemon.height !== null) {
+    physicalHTML = `
+      <div class="pokemon-physical">
+        <p><strong>⚖️ Peso:</strong> ${pokemon.weight / 10} kg</p>
+        <p><strong>📏 Altura:</strong> ${pokemon.height / 10} m</p>
+      </div>
+    `;
+  }
+  
+  return `
+    <div class="pokemon-header">
+      <h4>🐾 ${name}</h4>
+      <p><strong>Tipo(s):</strong> ${types}</p>
+    </div>
+    
+    <div class="pokemon-image">
+      <img src="${imageUrl}" alt="${name}" onerror="this.src='https://via.placeholder.com/96x96?text=Pokemon'">
+    </div>
+    
+    ${physicalHTML}
+    ${statsHTML}
+    
+    ${isSpinOff ? '<p class="spin-off-note">ℹ️ Región spin-off</p>' : ''}
+  `;
+}
+
+// Helper function to get Pokemon ID from name (for image URL)
+function getPokemonIdFromName(name) {
+  // This is a simple approximation - in real apps you'd have a proper mapping
+  const commonPokemon = {
+    'pikachu': 25, 'charizard': 6, 'blastoise': 9, 'venusaur': 3,
+    'mewtwo': 150, 'mew': 151, 'eevee': 133, 'umbreon': 197,
+    'espeon': 196, 'lucario': 448, 'gardevoir': 282, 'rayquaza': 384
+  };
+  
+  return commonPokemon[name.toLowerCase()] || 1; // Default to Bulbasaur
+}
+
+// Helper function to translate stat names to Spanish
+function translateStatName(statName) {
+  const translations = {
+    'hp': 'PS',
+    'attack': 'Ataque',
+    'defense': 'Defensa',
+    'special-attack': 'At. Especial',
+    'special-defense': 'Def. Especial',
+    'speed': 'Velocidad'
+  };
+  
+  return translations[statName] || statName;
+}
+
+// Navigation functions
+function goBack() {
+  if (currentState.view === 'location') {
+    // Go back to region view
+    displayRegionInfo(currentState.currentRegion, currentState.regionData);
+  } else if (currentState.view === 'region') {
+    // Go back to home
+    goHome();
+  }
+}
+
+function goHome() {
+  currentState = {
+    view: 'home',
+    currentRegion: null,
+    currentLocation: null,
+    regionData: null
+  };
+  
+  hideAllSections();
+}
+
+// Initialize the application when page loads
+document.addEventListener('DOMContentLoaded', function() {
+  console.log("🚀 Pokédex app initialized!");
+  console.log("Click on any region in the map to start exploring!");
+  
+  // Verify that elements exist
+  console.log("📋 Checking page elements...");
+  console.log("Map image:", document.querySelector('img[usemap="#pokemon-map"]'));
+  console.log("Map areas:", document.querySelectorAll('area').length);
+  
+  // Also attach click listeners programmatically as backup
+  attachMapClickListeners();
+  
+  // Don't run the automatic demo anymore since we have interactive UI
+  // runDemo();
+});
+
+// Backup method: Attach click listeners programmatically
+function attachMapClickListeners() {
+  console.log("🔗 Attaching click listeners programmatically...");
+  
+  const areas = document.querySelectorAll('area');
+  console.log(`Found ${areas.length} map areas`);
+  
+  areas.forEach((area, index) => {
+    const regionName = area.alt.toLowerCase().replace(' region', '').replace(' (test)', '');
+    console.log(`Setting up area ${index}: ${regionName}`);
+    
+    // Add event listener as backup
+    area.addEventListener('click', function(e) {
+      e.preventDefault();
+      console.log(`🖱️ Programmatic click detected for: ${regionName}`);
+      
+      if (regionName === 'kalos' && area.title.includes('TEST')) {
+        testClick(regionName);
+      } else {
+        selectRegion(regionName);
+      }
+    });
+    
+    // Also make sure the onclick attribute is properly set
+    if (regionName === 'kalos' && area.title.includes('TEST')) {
+      area.setAttribute('onclick', `testClick('${regionName}')`);
+    } else {
+      area.setAttribute('onclick', `selectRegion('${regionName}')`);
+    }
+  });
+}
+
+// =============================================================================
+// DOM DISPLAY FUNCTIONS
+// =============================================================================
 
