@@ -92,7 +92,14 @@
                 <div class="modal-body">
                     <!-- Loading indicator for modal -->
                     <div id="modal-loading" class="modal-loading">
-                        <p>Cargando Pokemon...</p>
+                        <div class="pokeball-loader">
+                            <div class="pokeball-center"></div>
+                        </div>
+                        <div class="sparkle"></div>
+                        <div class="sparkle"></div>
+                        <div class="sparkle"></div>
+                        <div class="sparkle"></div>
+                        <p class="loading-text">Cargando Pokemon...</p>
                     </div>
                     
                     <!-- Pokemon types section -->
@@ -425,17 +432,20 @@
                     modal.classList.remove('hidden');  // Remove hidden FIRST
                     modal.classList.add('show');       // Then add show
                     
-                    // Force styles as backup
-                    modal.style.display = 'flex';
-                    modal.style.alignItems = 'center';
-                    modal.style.justifyContent = 'center';
-                    modal.style.position = 'fixed';
-                    modal.style.top = '0';
-                    modal.style.left = '0';
-                    modal.style.width = '100%';
-                    modal.style.height = '100%';
-                    modal.style.zIndex = '1000';
-                    modal.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+                    // Force styles as backup with proper centering
+                    modal.style.cssText = `
+                        display: flex !important;
+                        align-items: center !important;
+                        justify-content: center !important;
+                        position: fixed !important;
+                        top: 0 !important;
+                        left: 0 !important;
+                        width: 100vw !important;
+                        height: 100vh !important;
+                        z-index: 1000 !important;
+                        background-color: rgba(0, 0, 0, 0.8) !important;
+                        opacity: 1 !important;
+                    `;
                     
                     console.log('🎯 MODAL: After show - classes:', modal.className);
                     console.log('🎯 MODAL: Inline styles applied:', modal.style.cssText);
@@ -610,20 +620,81 @@
                     // Show Pokemon
                     if (pokemonGrid && pokemonData.length > 0) {
                         let pokemonHTML = '';
-                        pokemonData.forEach(pokemon => {
-                            const sprite = pokemon.sprites.front_default || 'https://via.placeholder.com/96x96?text=?';
+                        pokemonData.forEach((pokemon, index) => {
+                            // Try to get animated sprite (GIF) first, fallback to static
+                            const animatedSprite = pokemon.sprites.versions?.['generation-v']?.['black-white']?.animated?.front_default;
+                            const staticSprite = pokemon.sprites.front_default;
+                            const sprite = animatedSprite || staticSprite || 'https://via.placeholder.com/96x96?text=?';
+                            
                             const types = pokemon.types.map(t => t.type.name).join(', ');
+                            const typesList = pokemon.types.map(t => `<span class="type-badge type-${t.type.name}">${t.type.name}</span>`).join(' ');
+                            
+                            // Calculate stats for bars (normalized to 0-100)
+                            const stats = pokemon.stats || [];
+                            const hp = stats.find(s => s.stat.name === 'hp')?.base_stat || 0;
+                            const attack = stats.find(s => s.stat.name === 'attack')?.base_stat || 0;
+                            const defense = stats.find(s => s.stat.name === 'defense')?.base_stat || 0;
+                            const speed = stats.find(s => s.stat.name === 'speed')?.base_stat || 0;
+                            
+                            // Normalize stats to percentage (max typical stat is around 180)
+                            const hpPercent = Math.min((hp / 150) * 100, 100);
+                            const attackPercent = Math.min((attack / 150) * 100, 100);
+                            const defensePercent = Math.min((defense / 150) * 100, 100);
+                            const speedPercent = Math.min((speed / 150) * 100, 100);
+                            
+                            // Random chance for shiny effect (5% chance)
+                            const isShiny = Math.random() < 0.05;
+                            const shinyClass = isShiny ? 'shiny' : '';
+                            
                             pokemonHTML += `
-                                <div class="pokemon-item">
-                                    <img src="${sprite}" alt="${pokemon.name}" class="pokemon-sprite">
-                                    <h4>${pokemon.name}</h4>
-                                    <p>Tipos: ${types}</p>
-                                    <p>Altura: ${pokemon.height / 10}m</p>
-                                    <p>Peso: ${pokemon.weight / 10}kg</p>
+                                <div class="pokemon-item ${shinyClass}" style="animation-delay: ${index * 0.1}s">
+                                    <img src="${sprite}" alt="${pokemon.name}" class="pokemon-sprite" 
+                                         onerror="this.src='${staticSprite}'" loading="lazy">
+                                    <h4>${pokemon.name}${isShiny ? ' ✨' : ''}</h4>
+                                    <div class="pokemon-types">${typesList}</div>
+                                    <div class="pokemon-stats">
+                                        <div class="stat-bar">
+                                            <div class="stat-label">HP <span class="stat-value">${hp}</span></div>
+                                            <div class="stat-bar-bg">
+                                                <div class="stat-bar-fill" style="--width: ${hpPercent}%; width: 0%;"></div>
+                                            </div>
+                                        </div>
+                                        <div class="stat-bar">
+                                            <div class="stat-label">ATK <span class="stat-value">${attack}</span></div>
+                                            <div class="stat-bar-bg">
+                                                <div class="stat-bar-fill" style="--width: ${attackPercent}%; width: 0%;"></div>
+                                            </div>
+                                        </div>
+                                        <div class="stat-bar">
+                                            <div class="stat-label">DEF <span class="stat-value">${defense}</span></div>
+                                            <div class="stat-bar-bg">
+                                                <div class="stat-bar-fill" style="--width: ${defensePercent}%; width: 0%;"></div>
+                                            </div>
+                                        </div>
+                                        <div class="stat-bar">
+                                            <div class="stat-label">SPD <span class="stat-value">${speed}</span></div>
+                                            <div class="stat-bar-bg">
+                                                <div class="stat-bar-fill" style="--width: ${speedPercent}%; width: 0%;"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <p style="font-size: 0.8em; color: #95a5a6;">
+                                        📏 ${pokemon.height / 10}m • ⚖️ ${pokemon.weight / 10}kg
+                                    </p>
                                 </div>
                             `;
                         });
                         pokemonGrid.innerHTML = pokemonHTML;
+                        
+                        // Animate stat bars after a short delay
+                        setTimeout(() => {
+                            const statBars = document.querySelectorAll('.stat-bar-fill');
+                            statBars.forEach(bar => {
+                                const targetWidth = bar.style.getPropertyValue('--width');
+                                bar.style.width = targetWidth;
+                            });
+                        }, 500);
+                        
                         if (modalList) modalList.classList.remove('hidden');
                     }
                     
