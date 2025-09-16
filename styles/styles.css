@@ -1,6 +1,6 @@
-/* Pokemon Region Explorer - Minimalistic Red Theme */
+/* Explorador de Regiones Pokemon - Tema Rojo Minimalista */
 
-/* Global styles */
+/* Estilos globales */
 body {
     font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
@@ -42,7 +42,7 @@ h1 {
     }
 }
 
-/* Map container - RESPONSIVE */
+/* Contenedor de mapa - RESPONSIVO */
 #pokedex {
     text-align: center;
     margin-bottom: 30px;
@@ -53,7 +53,7 @@ h1 {
     overflow: hidden;
 }
 
-/* RESPONSIVE IMAGE - Works with dynamic coordinates */
+/* IMAGEN RESPONSIVA - Funciona con coordenadas dinámicas */
 #pokemon-map-image {
     width: 100%;
     height: auto;
@@ -84,7 +84,7 @@ h1 {
     }
 }
 
-/* Utility classes */
+/* Clases de utilidad */
 .hidden {
     display: none !important;
 }
@@ -99,12 +99,12 @@ h1 {
     font-weight: 500;
 }
 
-/* Content area styles */
+/* Estilos del área de contenido */
 #content-area {
     margin-top: 30px;
 }
 
-/* Loading indicator */
+/* Indicador de carga */
 #loading {
     text-align: center;
     padding: 40px 20px;
@@ -113,7 +113,7 @@ h1 {
     font-weight: 500;
 }
 
-/* Location search container */
+/* Contenedor de búsqueda de ubicaciones */
 #location-search-container {
     display: flex;
     align-items: center;
@@ -160,7 +160,7 @@ h1 {
     color: #d63031;
 }
 
-/* Location info and pagination */
+/* Información de ubicación y paginación */
 #location-info {
     text-align: center;
     margin: 20px 0;
@@ -189,7 +189,7 @@ h1 {
     transform: translateY(0);
 }
 
-/* Locations grid */
+/* Cuadrícula de ubicaciones */
 #locations-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -260,7 +260,7 @@ h1 {
     }
 }
 
-/* Staggered animation for location cards */
+/* Animación escalonada para tarjetas de ubicación */
 .location-item:nth-child(1) { animation-delay: 0.1s; }
 .location-item:nth-child(2) { animation-delay: 0.2s; }
 .location-item:nth-child(3) { animation-delay: 0.3s; }
@@ -286,7 +286,7 @@ h1 {
     line-height: 1.4;
 }
 
-/* Region title styles */
+/* Estilos del título de región */
 h2, h3 {
     color: #d63031;
     font-weight: 600;
@@ -298,7 +298,7 @@ h3 {
     font-size: 24px;
 }
 
-/* Navigation buttons */
+/* Botones de navegación */
 button {
     background: #d63031;
     color: white;
@@ -328,7 +328,7 @@ button:active {
 .type-steel { background: #B8B8D0; }
 .type-fairy { background: #EE99AC; }
 
-/* Loading indicator */
+/* Indicador de carga */
 #loading {
     text-align: center;
     padding: 40px;
@@ -346,7 +346,7 @@ button:active {
     to { opacity: 1; }
 }
 
-/* Region information */
+/* Información de región */
 #region-info {
     background: #e3f2fd;
     padding: 20px;
@@ -372,7 +372,7 @@ button:active {
     font-size: 1.1em;
 }
 
-/* Locations container */
+/* Contenedor de ubicaciones */
 #locations-container {
     margin-bottom: 30px;
 }
@@ -413,7 +413,7 @@ button:active {
     transform: translateY(0);
 }
 
-/* Pokemon container */
+/* Contenedor de Pokemon */
 #pokemon-container {
     margin-bottom: 30px;
 }
@@ -525,7 +525,7 @@ button:active {
     border-left: 3px solid #03a9f4;
 }
 
-/* No Pokemon message */
+/* Mensaje de no hay Pokemon */
 #no-pokemon-message {
     text-align: center;
     padding: 40px;
@@ -540,7 +540,7 @@ button:active {
     margin: 0;
 }
 
-/* Navigation buttons */
+/* Botones de navegación */
 #navigation {
     text-align: center;
     margin-top: 30px;
@@ -572,7 +572,7 @@ button:active {
     transform: translateY(0);
 }
 
-/* Responsive design */
+/* Diseño responsivo */
 @media (max-width: 768px) {
     .main {
         margin: 10px;
@@ -613,7 +613,7 @@ button:active {
     }
 }
 
-/* Pokemon Modal Popup Styles */
+/* Estilos del Popup Modal de Pokemon */
 .modal {
     display: none;
     position: fixed;
@@ -627,7 +627,7 @@ button:active {
     animation: modalFadeIn 0.3s ease-out;
 }
 
-/* Modal entrance animation */
+/* Animación de entrada del modal */
 @keyframes modalFadeIn {
     from {
         opacity: 0;
@@ -639,7 +639,7 @@ button:active {
     }
 }
 
-/* Higher specificity to override hidden class */
+/* Mayor especificidad para anular la clase hidden */
 .modal.show:not(.hidden) {
     display: flex !important;
     align-items: center;
@@ -733,7 +733,7 @@ button:active {
     margin: 20px 0;
 }
 
-/* Pokeball Loading Animation - Improved */
+/* Animación de Carga Pokeball - Mejorada */
 .pokeball-loader {
     width: 64px;
     height: 64px;
@@ -777,7 +777,7 @@ button:active {
     100% { transform: rotate(360deg); }
 }
 
-/* Loading text animation */
+/* Animación del texto de carga */
 .loading-text {
     animation: loading-pulse 1.5s ease-in-out infinite;
 }
@@ -787,7 +787,7 @@ button:active {
     50% { opacity: 1; }
 }
 
-/* Pokemon Types Grid */
+/* Cuadrícula de Tipos de Pokemon */
 .types-grid {
     display: flex;
     flex-wrap: wrap;
@@ -826,7 +826,7 @@ button:active {
     }
 }
 
-/* Pokemon Grid */
+/* Cuadrícula de Pokemon */
 .pokemon-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -927,7 +927,7 @@ button:active {
     50% { transform: translateY(-8px); }
 }
 
-/* Modal responsive */
+/* Modal responsivo */
 @media (max-width: 768px) {
     .modal {
         padding: 10px;
@@ -977,7 +977,7 @@ button:active {
     }
 }
 
-/* Pokemon type colors */
+/* Colores de tipos de Pokemon */
 .type-normal { background: #A8A878; }
 .type-fire { background: #F08030; }
 .type-water { background: #6890F0; }
@@ -997,7 +997,7 @@ button:active {
 .type-steel { background: #B8B8D0; }
 .type-fairy { background: #EE99AC; }
 
-/* Pokemon Stats Bars */
+/* Barras de Estadísticas de Pokemon */
 .pokemon-stats {
     margin: 15px 0;
     text-align: left;
@@ -1050,7 +1050,7 @@ button:active {
     color: #636e72;
 }
 
-/* Shiny effect for rare Pokemon */
+/* Efecto brillante para Pokemon raros */
 .pokemon-item.shiny {
     background: linear-gradient(135deg, #ffd700 0%, #ffeb3b 50%, #ffd700 100%);
     box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
@@ -1068,7 +1068,7 @@ button:active {
     }
 }
 
-/* Entrance animations for cards with staggered delay */
+/* Animaciones de entrada para tarjetas con retraso escalonado */
 .pokemon-item:nth-child(1) { animation-delay: 0.1s; }
 .pokemon-item:nth-child(2) { animation-delay: 0.2s; }
 .pokemon-item:nth-child(3) { animation-delay: 0.3s; }
@@ -1082,14 +1082,14 @@ button:active {
 .pokemon-item:nth-child(11) { animation-delay: 1.1s; }
 .pokemon-item:nth-child(12) { animation-delay: 1.2s; }
 
-/* Type badge staggered animations */
+/* Animaciones escalonadas de insignias de tipo */
 .type-badge:nth-child(1) { animation-delay: 0.1s; }
 .type-badge:nth-child(2) { animation-delay: 0.2s; }
 .type-badge:nth-child(3) { animation-delay: 0.3s; }
 .type-badge:nth-child(4) { animation-delay: 0.4s; }
 .type-badge:nth-child(5) { animation-delay: 0.5s; }
 
-/* Loading sparkles animation */
+/* Animación de destellos de carga */
 .sparkle {
     position: absolute;
     width: 4px;

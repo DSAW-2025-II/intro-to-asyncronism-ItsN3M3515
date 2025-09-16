@@ -11,40 +11,40 @@
                     <h1>Explorador de Regiones Pokemon</h1>
         
         <div id="pokedex">
-            <!-- RESPONSIVE IMAGE - No <map> needed, using dynamic coordinates -->
+            <!-- IMAGEN RESPONSIVA - No necesita <map>, usa coordenadas dinámicas -->
             <img src="images/map.png" alt="Mapa del Mundo Pokemon" id="pokemon-map-image">
         </div>
 
-        <!-- Display sections for region and Pokemon data -->
+        <!-- Secciones de visualización para datos de región y Pokemon -->
         <div id="content-area">
-            <!-- Loading indicator -->
+            <!-- Indicador de carga -->
             <div id="loading" class="hidden">
                 <p>Cargando...</p>
             </div>
 
-            <!-- Error messages -->
+            <!-- Mensajes de error -->
             <div id="error-message" class="hidden error">
                 <p id="error-text"></p>
             </div>
 
-            <!-- Region information display -->
+            <!-- Visualización de información de región -->
             <div id="region-info" class="hidden">
                 <h2 id="region-title"></h2>
                 <p id="region-description"></p>
                 <div id="region-stats"></div>
             </div>
 
-            <!-- Locations/Areas container with search -->
+            <!-- Contenedor de Ubicaciones/Áreas con búsqueda -->
             <div id="locations-container" class="hidden">
                 <h3>Ubicaciones Disponibles en <span id="selected-region"></span></h3>
                 
-                <!-- Search bar for locations -->
+                <!-- Barra de búsqueda para ubicaciones -->
                 <div id="location-search-container">
                     <input type="text" id="location-search" placeholder="Buscar ubicaciones..." />
                     <button id="search-clear">×</button>
                 </div>
                 
-                <!-- Location count and pagination info -->
+                <!-- Conteo de ubicaciones e información de paginación -->
                 <div id="location-info">
                     <p>Mostrando <span id="locations-shown">0</span> de <span id="locations-total">0</span> ubicaciones</p>
                     <button id="load-more-locations" class="hidden">Cargar Más Ubicaciones</button>
@@ -53,17 +53,17 @@
                 <div id="locations-grid"></div>
             </div>
 
-            <!-- Pokemon display area with type colors -->
+            <!-- Área de visualización de Pokemon con colores de tipos -->
             <div id="pokemon-container" class="hidden">
                 <h3 id="location-title"></h3>
                 
-                <!-- Pokemon types in this location -->
+                <!-- Tipos de Pokemon en esta ubicación -->
                 <div id="pokemon-types-container">
                     <h4>🎨 Tipos de Pokemon en esta área:</h4>
                     <div id="pokemon-types-grid"></div>
                 </div>
                 
-                <!-- Pokemon list -->
+                <!-- Lista de Pokemon -->
                 <div id="pokemon-list-container">
                     <h4>🎯 Pokemon disponibles:</h4>
                     <div id="pokemon-grid"></div>
@@ -74,14 +74,14 @@
                 </div>
             </div>
 
-            <!-- Back button -->
+            <!-- Botón de regreso -->
             <div id="navigation" class="hidden">
                 <button id="back-button">⬅️ Volver</button>
                 <button id="home-button">🏠 Inicio</button>
             </div>
         </div>
 
-        <!-- Pokemon Location Modal Popup -->
+        <!-- Popup Modal de Ubicación Pokemon -->
         <div id="pokemon-modal" class="modal hidden">
             <div class="modal-content">
                 <div class="modal-header">
@@ -90,7 +90,7 @@
                 </div>
                 
                 <div class="modal-body">
-                    <!-- Loading indicator for modal -->
+                    <!-- Indicador de carga para modal -->
                     <div id="modal-loading" class="modal-loading">
                         <div class="pokeball-loader">
                             <div class="pokeball-center"></div>
@@ -102,13 +102,13 @@
                         <p class="loading-text">Cargando Pokemon...</p>
                     </div>
                     
-                    <!-- Pokemon types section -->
+                    <!-- Sección de tipos de Pokemon -->
                     <div id="modal-pokemon-types" class="hidden">
                         <h3>Tipos de Pokemon en esta ubicación</h3>
                         <div id="modal-types-grid" class="types-grid"></div>
                     </div>
                     
-                    <!-- Pokemon list section -->
+                    <!-- Sección de lista de Pokemon -->
                     <div id="modal-pokemon-list" class="hidden">
                         <h3>Pokemon disponibles</h3>
                         <div id="modal-pokemon-grid" class="pokemon-grid"></div>
@@ -117,7 +117,7 @@
                         </div>
                     </div>
                     
-                    <!-- No Pokemon message -->
+                    <!-- Mensaje de no hay Pokemon -->
                     <div id="modal-no-pokemon" class="hidden">
                         <p>No hay Pokemon disponibles en esta ubicación</p>
                     </div>
@@ -125,9 +125,9 @@
             </div>
         </div>
 
-        <!-- DYNAMIC COORDINATE SYSTEM -->
+        <!-- SISTEMA DE COORDENADAS DINÁMICO -->
         <script>
-            // REGION COORDINATES (original 4561x2670 image)
+            // COORDENADAS DE REGIONES (imagen original 4561x2670)
             const REGIONS = {
                 kalos: { coords: [639,1058,1258,1336], name: "Kalos" },
                 orre: { coords: [870,1526,1384,1766], name: "Orre" },
@@ -148,7 +148,7 @@
             const ORIGINAL_WIDTH = 4561;
             const ORIGINAL_HEIGHT = 2670;
 
-            // Initialize dynamic coordinate system
+            // Inicializar sistema de coordenadas dinámico
             function initDynamicMap() {
                 const img = document.getElementById('pokemon-map-image');
                 if (!img) return;
@@ -163,21 +163,21 @@
                 const img = event.target;
                 const rect = img.getBoundingClientRect();
                 
-                // Get click position relative to image
+                // Obtener posición del clic relativa a la imagen
                 const clickX = event.clientX - rect.left;
                 const clickY = event.clientY - rect.top;
                 
-                // Calculate scale factors
+                // Calcular factores de escala
                 const scaleX = ORIGINAL_WIDTH / img.offsetWidth;
                 const scaleY = ORIGINAL_HEIGHT / img.offsetHeight;
                 
-                // Convert to original coordinates
+                // Convertir a coordenadas originales
                 const originalX = Math.round(clickX * scaleX);
                 const originalY = Math.round(clickY * scaleY);
                 
                 console.log(`🎯 Map clicked: (${originalX}, ${originalY})`);
                 
-                // Find which region was clicked
+                // Encontrar qué región fue clickeada
                 const clickedRegion = findRegionByCoordinates(originalX, originalY);
                 
                 if (clickedRegion) {
@@ -186,13 +186,13 @@
                     );
                     console.log(`🌍 Region detected: ${clickedRegion} (${regionKey})`);
                     
-                    // DEBUG: Check what functions are available
+                    // DEBUG: Verificar qué funciones están disponibles
                     console.log('🔍 Function availability check:');
                     console.log('- inlineSelectRegion:', typeof window.inlineSelectRegion);
                     console.log('- selectRegion:', typeof window.selectRegion);
                     console.log('- debugRegionClick:', typeof window.debugRegionClick);
                     
-                    // Call inline function first (prevents conflicts with script.js)
+                    // Llamar función inline primero (previene conflictos con script.js)
                     if (typeof window.inlineSelectRegion === 'function') {
                         console.log('🚀 Calling window.inlineSelectRegion...');
                         window.inlineSelectRegion(regionKey);
@@ -221,11 +221,11 @@
                 return null;
             }
 
-            // Initialize when page loads
+            // Inicializar cuando la página carga
             window.addEventListener('load', function() {
                 setTimeout(initDynamicMap, 100);
                 
-                // Close modal when clicking outside
+                // Cerrar modal al hacer clic fuera
                 const modal = document.getElementById('pokemon-modal');
                 if (modal) {
                     modal.addEventListener('click', function(e) {
@@ -235,7 +235,7 @@
                     });
                 }
                 
-                // Close modal with Escape key
+                // Cerrar modal con tecla Escape
                 document.addEventListener('keydown', function(e) {
                     if (e.key === 'Escape') {
                         closePokemonModal();
@@ -243,11 +243,11 @@
                 });
             });
             
-            // INLINE POKEMON REGION FUNCTION - main app functionality (renamed to avoid conflicts)
+            // FUNCIÓN INLINE DE REGIÓN POKEMON - funcionalidad principal de la app (renombrada para evitar conflictos)
             window.inlineSelectRegion = async function(regionName) {
                 console.log('INLINE: Loading region ' + regionName);
                 
-                // Show loading indicator
+                // Mostrar indicador de carga
                 const loadingEl = document.getElementById('loading');
                 const locationsContainer = document.getElementById('locations-container');
                 const selectedRegionSpan = document.getElementById('selected-region');
@@ -256,40 +256,40 @@
                 const errorMessage = document.getElementById('error-message');
                 const errorText = document.getElementById('error-text');
                 
-                // Hide all containers first
+                // Ocultar todos los contenedores primero
                 if (regionInfo) regionInfo.classList.add('hidden');
                 if (locationsContainer) locationsContainer.classList.add('hidden');
                 if (errorMessage) errorMessage.classList.add('hidden');
                 
-                // Show loading
+                // Mostrar carga
                 if (loadingEl) {
                     loadingEl.classList.remove('hidden');
                     loadingEl.style.display = 'block';
                     console.log('Loading indicator shown');
                 }
                 
-                // Update region title and selected region
+                // Actualizar título de región y región seleccionada
                 if (regionTitle) regionTitle.textContent = regionName.charAt(0).toUpperCase() + regionName.slice(1);
                 if (selectedRegionSpan) selectedRegionSpan.textContent = regionName.charAt(0).toUpperCase() + regionName.slice(1);
                 
                 try {
-                    // Make real API call using the existing function
+                    // Hacer llamada real a la API usando la función existente
                     console.log('🔍 Calling getUniversalRegionInfo for:', regionName);
                     
                     let regionData;
                     
-                    // Try to get the function from the global scope first
+                    // Intentar obtener la función del scope global primero
                     let getUniversalRegionInfo = window.getUniversalRegionInfo;
                     
                     if (typeof getUniversalRegionInfo !== 'function') {
                         console.log('⚠️ Global getUniversalRegionInfo not available, making direct API call...');
                         
-                        // Make direct API call to Pokemon API
+                        // Hacer llamada directa a la API de Pokemon
                         const response = await fetch('https://pokeapi.co/api/v2/region/' + regionName);
                         if (!response.ok) throw new Error('Region not found: ' + regionName);
                         const apiResponse = await response.json();
                         
-                        // Extract locations from the response
+                        // Extraer ubicaciones de la respuesta
                         const validLocations = apiResponse.locations.map(location => {
                             const locationId = location.url.split('/').filter(Boolean).pop();
                             return {
@@ -314,17 +314,17 @@
                         console.log('📍 API response:', regionData);
                     }
                     
-                    // Hide loading
+                    // Ocultar carga
                     if (loadingEl) loadingEl.classList.add('hidden');
                     
                     if (regionData && regionData.areas && regionData.areas.validLocations && regionData.areas.validLocations.length > 0) {
-                        // Show locations container
+                        // Mostrar contenedor de ubicaciones
                         if (locationsContainer) {
                             locationsContainer.classList.remove('hidden');
                             console.log('✅ Locations container shown');
                         }
                         
-                        // Populate with real API data (first 10 locations as requested)
+                        // Poblar con datos reales de la API (primeras 10 ubicaciones como se solicitó)
                         const locationsGrid = document.getElementById('locations-grid');
                         const locations = regionData.areas.validLocations.slice(0, 10);
                         
@@ -339,7 +339,7 @@
                             });
                             locationsGrid.innerHTML = locationsHTML;
                             
-                            // Update counters
+                            // Actualizar contadores
                             const locationsShownSpan = document.getElementById('locations-shown');
                             const locationsTotalSpan = document.getElementById('locations-total');
                             const loadMoreButton = document.getElementById('load-more-locations');
@@ -347,16 +347,16 @@
                             if (locationsShownSpan) locationsShownSpan.textContent = locations.length;
                             if (locationsTotalSpan) locationsTotalSpan.textContent = regionData.areas.validLocations.length;
                             
-                            // Show load more button if there are more locations
+                            // Mostrar botón de cargar más si hay más ubicaciones
                             if (loadMoreButton && regionData.areas.validLocations.length > 10) {
                                 loadMoreButton.classList.remove('hidden');
                                 
-                                // Store region data for load more functionality
+                                // Almacenar datos de región para funcionalidad de cargar más
                                 window.currentRegionData = regionData;
                                 window.currentRegionName = regionName;
                                 window.currentLocationsShown = 10;
                                 
-                                // Add click handler for load more button
+                                // Agregar manejador de clic para botón de cargar más
                                 loadMoreButton.onclick = function() {
                                     inlineLoadMoreLocations();
                                 };
@@ -365,7 +365,7 @@
                             console.log('✅ Real locations loaded:', locations.length, 'of', regionData.areas.validLocations.length);
                         }
                     } else {
-                        // No locations found
+                        // No se encontraron ubicaciones
                         if (errorMessage && errorText) {
                             errorText.textContent = 'No se encontraron ubicaciones para la región ' + regionName;
                             errorMessage.classList.remove('hidden');
@@ -376,7 +376,7 @@
                 } catch (error) {
                     console.error('❌ Error loading region data:', error);
                     
-                    // Hide loading and show error
+                    // Ocultar carga y mostrar error
                     if (loadingEl) loadingEl.classList.add('hidden');
                     if (errorMessage && errorText) {
                         errorText.textContent = 'Error cargando región ' + regionName + ': ' + error.message;
@@ -385,11 +385,11 @@
                 }
             };
             
-            // INLINE LOCATION SELECTION FUNCTION (renamed to avoid conflicts)
+            // FUNCIÓN INLINE DE SELECCIÓN DE UBICACIÓN (renombrada para evitar conflictos)
             window.inlineSelectLocation = async function(regionName, locationName) {
                 console.log('📍 INLINE: Loading location ' + locationName + ' in ' + regionName);
                 
-                // Show modal
+                // Mostrar modal
                 showPokemonModal(locationName, regionName);
                 
                 // Start loading Pokemon data
@@ -849,7 +849,7 @@
             };
         </script>
         
-        <!-- External scripts with cache busting -->
+        <!-- Scripts externos con prevención de caché -->
         <script src="config/config.js?v=4"></script>
         <script src="scripts/script.js?v=4"></script>
         

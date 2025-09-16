@@ -1,24 +1,24 @@
-// COPY OF ORIGINAL SCRIPT WITH FILE LOGGING
+// COPIA DEL SCRIPT ORIGINAL CON REGISTRO A ARCHIVO
 // yo cuando variables de entorno
 // Verificar que estamos en el navegador antes de usar window
-const POKEMON_API_BASE = (typeof window !== 'undefined' && window.CONFIG?.POKEMON_API_URL) || "https://pokeapi.co/api/v2/"; // el "?" es para que no se dañe si no existe window.CONFIG (fallback)
+const POKEMON_API_BASE = (typeof window !== 'undefined' && window.CONFIG?.POKEMON_API_URL) || "https://pokeapi.co/api/v2/"; // el "?" es para que no se rompa si no existe window.CONFIG (respaldo)
 // esto es para evitar hacerle hardcode a la URL en el código
 
-// FILE LOGGING SETUP
+// CONFIGURACIÓN DE REGISTRO A ARCHIVO
 const fs = require('fs');
 const path = require('path');
 
-// Create logs directory if it doesn't exist
+// Crear directorio de logs si no existe
 const logsDir = './logs';
 if (!fs.existsSync(logsDir)) {
   fs.mkdirSync(logsDir);
 }
 
-// Log file path with timestamp
+// Ruta del archivo de log con marca de tiempo
 const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
 const logFilePath = path.join(logsDir, `pokemon-script-log-${timestamp}.txt`);
 
-// Custom logging functions
+// Funciones de logging personalizadas
 function logToFile(message, data = null) {
   const timeStr = new Date().toISOString();
   let logEntry = `[${timeStr}] ${message}`;
@@ -48,7 +48,7 @@ function errorToFile(message, error = null) {
   fs.appendFileSync(logFilePath, logEntry);
 }
 
-// Initialize log file
+// Inicializar archivo de log
 logToFile("🚀 POKEMON SCRIPT STARTED");
 logToFile("📁 Log file created", { logPath: logFilePath });
 

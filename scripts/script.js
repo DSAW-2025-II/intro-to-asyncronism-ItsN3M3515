@@ -2,18 +2,18 @@
 // Verificar que estamos en el navegador antes de usar window
 console.log("🔥 Script.js loading started...");
 
-// IMMEDIATE GLOBAL FUNCTION DEFINITIONS - Available right away for onclick
+// DEFINICIONES GLOBALES INMEDIATAS - Disponibles inmediatamente para onclick
 window.testClick = function(regionName) {
   console.log(`🧪 IMMEDIATE Test click working for: ${regionName}`);
   alert(`✅ SUCCESS! Click test works for: ${regionName.toUpperCase()}`);
 };
 
-// Simple test function for region clicking
+// Función de prueba simple para hacer clic en regiones
 window.testRegionClick = function(regionName) {
   console.log(`🎯 TEST REGION CLICK: ${regionName}`);
   alert(`🎯 TEST: Region ${regionName.toUpperCase()} clicked successfully!`);
   
-  // Show loading
+  // Mostrar carga
   const loadingEl = document.getElementById('loading');
   if (loadingEl) {
     loadingEl.classList.remove('hidden');
@@ -29,7 +29,7 @@ window.selectRegion = async function(regionName) {
     console.log(`🗺️ IMMEDIATE Region click for: ${regionName}`);
     console.log('🔄 Step 1: Function started successfully');
     
-    // First, check if the local selectRegion function exists
+    // Primero, verificar si existe la función selectRegion local
     console.log('� Step 2: About to check function availability...');
     console.log('�🔍 Function availability check:');
     console.log('- typeof selectRegion:', typeof selectRegion);
@@ -38,7 +38,7 @@ window.selectRegion = async function(regionName) {
     console.log('- selectRegion function:', selectRegion);
     
     console.log('🔄 Step 4: About to check DOM elements...');
-    // Check if DOM elements exist
+    // Verificar si existen los elementos DOM
     const loadingEl = document.getElementById('loading');
     const regionTitleEl = document.getElementById('region-title');
     console.log('🔍 DOM elements check:');
@@ -58,7 +58,7 @@ window.selectRegion = async function(regionName) {
       return;
     }
     
-    // If we get here, try calling the function
+    // Si llegamos aquí, intentar llamar a la función
     console.log('🚀 About to call selectRegion function...');
     await selectRegion(regionName);
     console.log('✅ selectRegion completed successfully');
@@ -78,7 +78,7 @@ window.goHome = function() {
   alert("🏠 Going home...");
 };
 
-const POKEMON_API_BASE = (typeof window !== 'undefined' && window.CONFIG?.POKEMON_API_URL) || "https://pokeapi.co/api/v2/"; // el "?" es para que no se dañe si no existe window.CONFIG (fallback)
+const POKEMON_API_BASE = (typeof window !== 'undefined' && window.CONFIG?.POKEMON_API_URL) || "https://pokeapi.co/api/v2/"; // el "?" es para que no se rompa si no existe window.CONFIG (respaldo)
 // esto es para evitar hacerle hardcode a la URL en el código
 
 console.log("🔧 Pokemon API Base URL:", POKEMON_API_BASE);
@@ -230,7 +230,7 @@ async function getRegionAreas(regionName) {
   try {
     console.log(`Buscando región: ${regionName}`);
     
-    // Check if it's a spin-off region first
+    // Verificar si es una región spin-off primero
     if (SPIN_OFF_REGIONS[regionName.toLowerCase()]) {
       return getSpinOffRegionAreas(regionName);
     }
@@ -384,7 +384,7 @@ async function getUniversalRegionInfo(regionName) {
     try {
       const areas = await getRegionAreas(regionName);
       if (areas && areas.validLocations.length > 0) {
-        // Get pokemon from first location as example
+        // Obtener pokemon de la primera ubicación como ejemplo
         const firstLocation = areas.validLocations[0].name;
         const pokemon = await getPokemonTypesInArea(`${firstLocation}-area`);
         return { areas, pokemon };
@@ -575,16 +575,16 @@ async function runDemo() {
 } 
 
 // =============================================================================
-// GLOBAL FUNCTIONS - Must be defined at top level for HTML onclick access
+// FUNCIONES GLOBALES - Deben definirse en el nivel superior para acceso HTML onclick
 // =============================================================================
 
-// Test function to verify clicks work
+// Función de prueba para verificar que los clics funcionan
 function testClick(regionName) {
   console.log(`🧪 Test click working for: ${regionName}`);
   alert(`Click test successful! Region: ${regionName}`);
 }
 
-// Global state to track current navigation
+// Estado global para rastrear la navegación actual
 let currentState = {
   view: 'home', // 'home', 'region', 'location'
   currentRegion: null,
@@ -592,7 +592,7 @@ let currentState = {
   regionData: null
 };
 
-// Utility functions for showing/hiding elements
+// Funciones de utilidad para mostrar/ocultar elementos
 function showElement(id) {
   const element = document.getElementById(id);
   if (element) element.classList.remove('hidden');
